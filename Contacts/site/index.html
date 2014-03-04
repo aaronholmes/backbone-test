@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Marionette Contact Manager</title>
+		<link href="./assets/css/bootstrap.css" rel="stylesheet">
+		<link href="./assets/css/application.css" rel="stylesheet">
+	</head>
+
+<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<span class="brand">Contact manager</span>
+			</div>
+		</div>
+	</div>
+
+	<div id="main-region" class="container">
+		<p>Here is static content in the web page. You'll notice that it gets
+		replaced by our app as soon as we start it.</p>
+	</div>
+
+	<script type="text/template" id="static-template">
+		<p>This is text that was rendered by our Marionette app.</p>
+	</script>
+
+	<script type="text/template" id="different-static-template">
+		<p>Text from a different template...</p>
+	</script>
+
+	<script type="text/template" id="contact-template">
+		<p><%= firstName %> <%= lastName %></p><p class="clickhere">click me!</p>
+	</script>
+
+	<script type="text/template" id="contact-list-item">
+		<p><%= firstName %> <%= lastName %></p>
+		<p class="clickhere">If you click it, they will come</p>
+	</script>
+
+	<script src="./assets/js/vendor/jquery.js"></script>
+	<script src="./assets/js/vendor/underscore.js"></script>
+	<script src="./assets/js/vendor/backbone.js"></script>
+	<script src="./assets/js/vendor/backbone.marionette.js"></script>
+
+	<script type="text/javascript">
+		var ContactManager = new Marionette.Application();
+
+		ContactManager.addRegions({
+			mainRegion: "#main-region"
+		})
+
+		ContactManager.Contact = Backbone.Model.extend({});
+	
+		ContactManager.StaticView = Marionette.ItemView.extend({
+			template: "#static-template"
+		})
+
+		ContactManager.ContactView = Marionette.ItemView.extend({
+			template: "#contact-template",
+
+			events: {
+				"click p.clickhere": "alertPhoneNumber"
+			},
+
+			alertPhoneNumber: function(){
+				alert(this.model.escape("phoneNumber"));
+			}
+		});
+
+		ContactManager.ContactItemView = Marionette.ItemView.extend({
+			template: "#contact-list-item",
+			tagName: "li"
+		});
+
+		ContactManager.ContactsView = Marionette.CollectionView.extend({
+			tagName: "ul",
+			itemView: ContactManager.ContactItemView,
+			events: {
+				"click p.clickhere": "alertWoo"
+			},
+
+			alertWoo: function(){
+				alert("No they will not");
+			}
+		});
+
+		ContactManager.ContactCollection = Backbone.Collection.extend({
+			model: ContactManager.Contact
+		});
+
+		ContactManager.on("initialize:after", function(){
+			console.log("ContactManager has started!");
+			var staticView = new ContactManager.StaticView();
+
+			var alice = new ContactManager.Contact({
+				firstName: "Alice",
+				lastName: "Arten",
+				phoneNumber: "555-0184"
+			});
+
+			var aliceView = new ContactManager.ContactView({
+				model: alice
+			});
+
+			var contacts = new ContactManager.ContactCollection([
+				{
+					firstName: "Bob",
+					lastName: "Brigham",
+					phoneNumber: "555-0163"
+				},
+				{
+					firstName: "Alice",
+					lastName: "Arten",
+					phoneNumber: "555-0184"
+				},
+				{
+					firstName: "Charlie",
+					lastName: "Campbell",
+					phoneNumber: "555-0129"
+				}
+			]);
+
+			var contactsListView = new ContactManager.ContactsView({
+				collection: contacts
+			});
+
+			/*
+			// Possible to pass in view like this dynamically 
+			var staticView = new ContactManager.StaticView({
+				template: "#different-static-template"
+			});
+			*/
+			ContactManager.mainRegion.show(staticView);
+
+			// 2 second wait just for testing
+			window.setTimeout(function() {
+				ContactManager.mainRegion.show(aliceView);
+			},2000);
+
+			// 2 second wait just for testing
+			window.setTimeout(function() {
+				ContactManager.mainRegion.show(contactsListView);
+			},4000);
+
+		});
+	
+		ContactManager.start();
+	</script>
+</body>
+</html>
