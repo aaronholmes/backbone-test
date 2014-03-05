@@ -35,8 +35,16 @@
 	</script>
 
 	<script type="text/template" id="contact-list-item">
-		<p><%= firstName %> <%= lastName %></p>
-		<p class="clickhere">If you click it, they will come</p>
+		<td><%= firstName %></td> 
+		<td><%= lastName %></td>
+	</script>
+
+	<script type="text/template" id="contact-list">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th></tr>
+		</thead>
+		<tbody>
+		</tbody>
 	</script>
 
 	<script src="./assets/js/vendor/jquery.js"></script>
