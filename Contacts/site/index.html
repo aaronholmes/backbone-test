@@ -48,8 +48,6 @@
 
 	<script type="text/javascript">
 		
-		ContactManager.Contact = Backbone.Model.extend({});
-	
 		ContactManager.StaticView = Marionette.ItemView.extend({
 			template: "#static-template"
 		})
@@ -83,15 +81,10 @@
 			}
 		});
 
-		ContactManager.ContactCollection = Backbone.Collection.extend({
-			model: ContactManager.Contact
-		});
-
 		ContactManager.on("initialize:after", function(){
-			console.log("ContactManager has started!");
 			var staticView = new ContactManager.StaticView();
 
-			var alice = new ContactManager.Contact({
+			var alice = new ContactManager.Entities.Contact({
 				firstName: "Alice",
 				lastName: "Arten",
 				phoneNumber: "555-0184"
@@ -101,23 +94,7 @@
 				model: alice
 			});
 
-			var contacts = new ContactManager.ContactCollection([
-				{
-					firstName: "Bob",
-					lastName: "Brigham",
-					phoneNumber: "555-0163"
-				},
-				{
-					firstName: "Alice",
-					lastName: "Arten",
-					phoneNumber: "555-0184"
-				},
-				{
-					firstName: "Charlie",
-					lastName: "Campbell",
-					phoneNumber: "555-0129"
-				}
-			]);
+			var contacts = ContactManager.request("contact:entities");
 
 			var contactsListView = new ContactManager.ContactsView({
 				collection: contacts
