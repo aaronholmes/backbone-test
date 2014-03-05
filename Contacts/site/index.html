@@ -45,79 +45,20 @@
 	<script src="./assets/js/vendor/backbone.marionette.js"></script>
 	<script src="./assets/js/app.js"></script>
 	<script src="./assets/js/entities/contact.js"></script>
+	<script src="./assets/js/apps/contacts/list/list_view.js"></script>
 
 	<script type="text/javascript">
-		
-		ContactManager.StaticView = Marionette.ItemView.extend({
-			template: "#static-template"
-		})
-
-		ContactManager.ContactView = Marionette.ItemView.extend({
-			template: "#contact-template",
-
-			events: {
-				"click p.clickhere": "alertPhoneNumber"
-			},
-
-			alertPhoneNumber: function(){
-				alert(this.model.escape("phoneNumber"));
-			}
-		});
-
-		ContactManager.ContactItemView = Marionette.ItemView.extend({
-			template: "#contact-list-item",
-			tagName: "li"
-		});
-
-		ContactManager.ContactsView = Marionette.CollectionView.extend({
-			tagName: "ul",
-			itemView: ContactManager.ContactItemView,
-			events: {
-				"click p.clickhere": "alertWoo"
-			},
-
-			alertWoo: function(){
-				alert("No they will not");
-			}
-		});
-
 		ContactManager.on("initialize:after", function(){
-			var staticView = new ContactManager.StaticView();
-
-			var alice = new ContactManager.Entities.Contact({
-				firstName: "Alice",
-				lastName: "Arten",
-				phoneNumber: "555-0184"
-			});
-
-			var aliceView = new ContactManager.ContactView({
-				model: alice
-			});
 
 			var contacts = ContactManager.request("contact:entities");
 
-			var contactsListView = new ContactManager.ContactsView({
+			var contactsListView = new ContactManager.ContactsApp.List.Contacts({
 				collection: contacts
 			});
 
-			/*
-			// Possible to pass in view like this dynamically 
-			var staticView = new ContactManager.StaticView({
-				template: "#different-static-template"
-			});
-			*/
-			ContactManager.mainRegion.show(staticView);
+			console.log(contactsListView);
 
-			// 2 second wait just for testing
-			window.setTimeout(function() {
-				ContactManager.mainRegion.show(aliceView);
-			},2000);
-
-			// 2 second wait just for testing
-			window.setTimeout(function() {
-				ContactManager.mainRegion.show(contactsListView);
-			},4000);
-
+			ContactManager.mainRegion.show(contactsListView);
 		});
 	
 		ContactManager.start();
