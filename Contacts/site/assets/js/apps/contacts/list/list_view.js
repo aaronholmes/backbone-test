@@ -4,12 +4,22 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
 		template: "#contact-list-item",
 
 		events: {
-			"click": "hightlightName"
+			"click": "hightlightName",
+			"click button.js-delete": "deleteClicked"
 		},
 
 		hightlightName: function(e){
 			e.preventDefault();
 			this.$el.toggleClass("warning");
+		},
+
+		deleteClicked: function(e){
+			e.stopPropagation();
+			this.trigger("contact:delete", this.model);
+		},
+
+		remove: function(){
+			this.$el.fadeOut();
 		}
 	});
 
