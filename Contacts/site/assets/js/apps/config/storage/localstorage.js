@@ -17,8 +17,7 @@ ContactManager.module("Entities", function(Entities, ContactManager, Backbone, M
 
 	var StorageMixin = function(entityPrototype){
 		var storageKey = findStorageKey(entityPrototype);
-		return { localStorage: new Backbone.localStorage(storageKey);
-		};
+		return { localStorage: new Backbone.LocalStorage(storageKey) };
 	};
 
 	Entities.configureStorage = function(entity){
