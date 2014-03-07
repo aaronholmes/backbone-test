@@ -42,7 +42,10 @@ ContactManager.module("Entities", function(Entities, ContactManager, Backbone, M
 		},
 		getContactEntity: function(contactId){
 			var contact = new Entities.Contact({id: contactId});
-			contact.fetch();
+			// Artificial latency for testing promises / async
+			setTimeout(function(){
+				contact.fetch();
+			}, 2000);
 			return contact;
 		}
 	};
